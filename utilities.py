@@ -61,7 +61,7 @@ def get_puzzle(x, im):
 
 
 def get_out(x):
-    # proc = cv2.GaussianBlur(x, (9, 9), 0)
+    #proc = cv2.GaussianBlur(x, (9, 9), 0)
     proc = cv2.GaussianBlur(x, (9, 9), 0)
     proc = cv2.cvtColor(proc, cv2.COLOR_BGR2GRAY)
     proc = cv2.adaptiveThreshold(proc, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2)
