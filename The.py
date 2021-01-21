@@ -1,0 +1,86 @@
+import cv2
+
+import numpy as np
+
+import operator
+
+from utilities import *
+
+import tensorflow.keras as keras
+
+import tensorflow as tf
+
+import keras.models as a
+
+
+# Image Input and basic Pre-processing
+proc, im = get_image("sudoku.jpeg")
+
+# Analyse the Image to get contours and Extract a Sudoku Grid
+imw = get_puzzle(proc, im)
+
+# Image thresholding and Pre-processing
+proc = get_out(imw)
+
+# Divide the Image (Sudoku Grid) and get each cell separately
+im2 = small_sq(proc)
+
+# Load the trained model
+model = a.load_model("model")
+put = np.zeros((9, 9), dtype=int)
+
+for i in range(81):
+    aaa = im2[i]
+    ww = aaa.shape[0]
+    hh = aaa.shape[1]
+    ww = ww//2
+    hh = hh//2
+
+    # Get the contour representing the digit
+    gt, cc = get_num_contour(aaa, ww, hh)
+
+    if gt == -1:
+        print("skip")
+        continue
+
+    # Using the above information to extract the digit
+    x, y, w, h = cv2.boundingRect(cc[gt])
+    ab = aaa[y:y+h, x:x+w]
+    ww = ab.shape[1]
+    hh = ab.shape[0]
+
+    # We keep the digit height constant at 20px
+    ww = 22*ww//hh
+    rw = ww//2
+    rh = ww//2
+
+    if ww % 2 == 1:
+        rh = rh+1
+
+    ab = cv2.resize(ab, (ww, 22))
+    ab = cv2.copyMakeBorder(ab, 3, 3, 14-rw, 14-rh, cv2.BORDER_CONSTANT)
+    # ab = cv2.GaussianBlur(ab,(3,3),0)
+
+    ab.astype('float32')
+    ab = ab / 255.0
+
+
+    # Dilation
+    # Gaussian
+    # erosion
+    # still remaining
+
+    # Load the saved prediction model and predict the digits
+    pred = model.predict(ab.reshape(1, 28, 28, 1), batch_size=1)
+    ans = pred.argmax()
+    if ans == 0:
+        ind = np.argsort(pred)
+        ans = ind[1]
+    if ans == 7:
+        if (ww/22) < 0.5:
+            ans = 1
+    if ans == 1:
+        if (ww/22) > 0.55:
+            ans = 7
+    put[(i // 9)][(i % 9)] = ans
+    print(ans, put)
