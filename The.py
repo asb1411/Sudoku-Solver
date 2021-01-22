@@ -6,6 +6,8 @@ import operator
 
 from utilities import *
 
+from work import *
+
 import tensorflow.keras as keras
 
 import tensorflow as tf
@@ -40,7 +42,7 @@ for i in range(81):
     gt, cc = get_num_contour(aaa, ww, hh)
 
     if gt == -1:
-        print("skip")
+        # print("skip")
         continue
 
     # Using the above information to extract the digit
@@ -83,4 +85,20 @@ for i in range(81):
         if (ww/22) > 0.55:
             ans = 7
     put[(i // 9)][(i % 9)] = ans
-    print(ans, put)
+    # print(ans, put)
+
+pfix = np.array(put)
+anss = get_ans(put)
+print(anss)
+ww = imw.shape[0] // 9
+hh = imw.shape[1] // 9
+for i in range(9):
+    for j in range(9):
+        if pfix[i][j] != 0:
+            continue
+        asize = cv2.getTextSize(str(anss[i][j]),cv2.FONT_HERSHEY_SIMPLEX,1,2)[0]
+        xx = (hh-asize[0])//2
+        yy = (ww+asize[1])//2
+        imw = cv2.putText(imw,str(anss[i][j]),(hh*j+xx,ww*i+yy),cv2.FONT_HERSHEY_SIMPLEX,1,(0,198,0),2)
+cv2.imshow("read",imw)
+cv2.waitKey(0)
