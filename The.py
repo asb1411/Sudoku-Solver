@@ -18,7 +18,7 @@ import keras.models as a
 
 
 # Image Input and basic Pre-processing
-file_name = "sudoku.jpeg"
+file_name = "test.jpeg"
 if len(sys.argv) > 1:
     file_name = sys.argv[1]
 proc, im = get_image(file_name)
