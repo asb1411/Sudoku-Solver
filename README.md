@@ -12,4 +12,6 @@ The program looks for an image file named "test.jpeg" by default, which can be o
 ## Neural Network
 The trained Neural Network for digit recognition is stored in models directory
 
+The Network is trained to an accuracy of 99.21%
+
 The source code is contained in network.py
