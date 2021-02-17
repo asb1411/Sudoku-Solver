@@ -23,14 +23,11 @@ def small_sq(arr):
 
 def get_image(str):
     im = cv2.imread(str)
-    # im = cv2.resize(im, (900, 600))
     # proc = cv2.GaussianBlur(im, (9, 9), 0)
     proc = cv2.GaussianBlur(im, (9, 9), 0)
     proc = cv2.cvtColor(proc, cv2.COLOR_BGR2GRAY)
     proc = cv2.adaptiveThreshold(proc, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2)
     proc = cv2.bitwise_not(proc, proc)
-    # proc = cv2.resize(proc, (450, 300))
-    # im = cv2.resize(im, (450, 300))
     # kernel = np.array([[0., 1., 0.], [1., 1., 1.], [0., 1., 0.]], np.uint8)
     # proc = cv2.dilate(proc, kernel)
     return proc, im
